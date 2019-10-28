@@ -51,7 +51,7 @@
 		                        type: 'success',
 		                        message: '登录成功'
 		                    });
-							this.$router.push('manage')
+							this.$router.push({name: 'customerdetail', params: {customerInfo: res.data}} )
 						}else{
 							this.$message({
 		                        type: 'error',
