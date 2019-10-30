@@ -2,28 +2,47 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-const login = r => require.ensure([], () => r(require('@/components/login/login')), 'login');
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
+const login = r => require.ensure([], () => r(require('@/components/common/login')), 'login');
+const register = r => require.ensure([], () => r(require('@/components/common/register')), 'register');
+const home = r => require.ensure([], () => r(require('@/components/common/home')), 'home');
 const customerdetail = r => require.ensure([], () => r(require('@/components/customer/detail')), 'customerdetail');
+const customerlist = r => require.ensure([], () => r(require('@/components/customer/list')), 'customerlist');
 
 const routes = [
 	{
 		path: '/login',
-		component: login
+		component: login,
+		name: 'login'
 	},
 	{
-		path: '/customer/detail',
-		component: customerdetail,
-		name: 'customerdetail',
-		meta: []
-	}
-	// {
-	// 	path: '/customer',
-	// 	children: [{
-	// 		path: '/detail',
-	// 		component: customerdetail,
-	// 		meta: [],
-	// 	}]
-	// }
+		path: '/register',
+		component: register,
+		name: 'register'
+	},
+	{
+		path: '/customer',
+		component: home,
+		name: 'home',
+		children: [
+			{
+				path: '/detail',
+				component: customerdetail,
+				name: 'customerdetail',
+				meta: ['用户管理', '用户详情'],
+			},
+			{
+				path: '/list',
+				component: customerlist,
+				name: 'customerlist',
+				meta: ['用户管理', '用户列表'],
+			}
+		]
+	}	
 ]
 
 export default new Router({

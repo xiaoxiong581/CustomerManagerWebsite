@@ -4,23 +4,27 @@
     <div class="customerdetail">
       <ul>
         <li>
-          <span>用户名称:</span>
+          <span>用户名称：</span>
           <span>{{this.$route.params.customerInfo.customerName}}</span>
         </li>
         <li>
-          <span>用户ID:</span>
+          <span>用户ID：</span>
           <span>{{this.$route.params.customerInfo.customerId}}</span>
         </li>
         <li>
-          <span>用户状态:</span>
+          <span>邮箱：</span>
+          <span>{{this.$route.params.customerInfo.email}}</span>
+        </li>
+        <li>
+          <span>用户状态：</span>
           <span>{{this.$route.params.customerInfo.status}}</span>
         </li>
         <li>
-          <span>创建时间:</span>
+          <span>创建时间：</span>
           <span>{{this.$route.params.customerInfo.createTime | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
         </li>
         <li>
-          <span>更新时间:</span>
+          <span>更新时间：</span>
           <span>{{this.$route.params.customerInfo.updateTime | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
         </li>
       </ul>
