@@ -12,8 +12,8 @@
           <el-form-item prop="password">
             <el-input type="password" placeholder="密码" v-model="registerForm.password"></el-input>
           </el-form-item>
-          <el-form-item prop="password">
-            <el-input type="password" placeholder="确认密码" v-model="registerForm.againPassword"></el-input>
+          <el-form-item prop="password_confirm">
+            <el-input type="password" placeholder="确认密码" v-model="registerForm.password_confirm"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -32,17 +32,26 @@
 </template>
 
 <script>
-import { post } from "@/backend/rest";
-import { register_url_post } from "@/backend/customerManagerUrl";
+import rest from "@/backend/rest";
+import customerManagerUrl from "@/backend/customerManagerUrl";
 
 export default {
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.registerForm.password) {
+        callback(new Error("两次输入密码不一致"));
+      } else {
+        callback();
+      }
+    };
     return {
       registerForm: {
         userName: "",
         email: "",
         password: "",
-        againPassword: ""
+        password_confirm: ""
       },
       rules: {
         userName: [
@@ -56,7 +65,11 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        password_confirm: [
+          { required: true, message: "请输入确认密码", trigger: "blur" },
+          { validator: validatePass, trigger: "blur" }
+        ]
       }
     };
   },
@@ -64,35 +77,34 @@ export default {
     registerCustomer(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          post(register_url_post, {
-            customerName: this.registerForm.userName,
-            email: this.registerForm.email,
-            password: this.registerForm.password
-          }).then(
-            res => {
-              if (res.code == 0) {
-                this.$message({
-                  type: "success",
-                  message: "注册成功"
-                });
-                this.$router.push({
-                  name: "customerdetail",
-                  params: { customerInfo: res.data }
-                });
-              } else {
+          rest
+            .post(customerManagerUrl.register_url_post, {
+              customerName: this.registerForm.userName,
+              email: this.registerForm.email,
+              password: this.registerForm.password
+            })
+            .then(
+              res => {
+                if (res.code == 0) {
+                  this.$message({
+                    type: "success",
+                    message: "注册成功"
+                  });
+                  this.$router.push("login");
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: res.message
+                  });
+                }
+              },
+              error => {
                 this.$message({
                   type: "error",
-                  message: res.message
+                  message: error
                 });
               }
-            },
-            error => {
-              this.$message({
-                type: "error",
-                message: error
-              });
-            }
-          );
+            );
         } else {
           this.$notify.error({
             title: "错误",

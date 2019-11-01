@@ -28,18 +28,19 @@ const routes = [
 		path: '/customer',
 		component: home,
 		name: 'home',
+		meta: {requireAuth: true},
 		children: [
 			{
 				path: '/detail',
 				component: customerdetail,
 				name: 'customerdetail',
-				meta: ['用户管理', '用户详情'],
+				meta: {requireAuth: true},
 			},
 			{
 				path: '/list',
 				component: customerlist,
 				name: 'customerlist',
-				meta: ['用户管理', '用户列表'],
+				meta: {requireAuth: true},
 			}
 		]
 	}	

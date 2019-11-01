@@ -5,69 +5,153 @@
       <ul>
         <li>
           <span>用户名称：</span>
-          <span>{{this.$route.params.customerInfo.customerName}}</span>
+          <span>{{customerInfo.customerName}}</span>
         </li>
         <li>
           <span>用户ID：</span>
-          <span>{{this.$route.params.customerInfo.customerId}}</span>
+          <span>{{customerInfo.customerId}}</span>
         </li>
         <li>
           <span>邮箱：</span>
-          <span>{{this.$route.params.customerInfo.email}}</span>
+          <span>{{customerInfo.email}}</span>
         </li>
         <li>
           <span>用户状态：</span>
-          <span>{{this.$route.params.customerInfo.status}}</span>
+          <span>{{customerInfo.status}}</span>
         </li>
         <li>
           <span>创建时间：</span>
-          <span>{{this.$route.params.customerInfo.createTime | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
+          <span>{{customerInfo.createTime}}</span>
         </li>
         <li>
           <span>更新时间：</span>
-          <span>{{this.$route.params.customerInfo.updateTime | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
+          <span>{{customerInfo.updateTime}}</span>
         </li>
       </ul>
     </div>
   </div>
 </template>
 
+<script>
+import rest from "@/backend/rest";
+import customerManagerUrl from "@/backend/customerManagerUrl";
+import customerStatus from "@/backend/customerStatus"
+import session from "@/backend/session";
+import moment from "moment";
+
+export default {
+  data() {
+    return {
+      customerInfo: {
+        customerName: "yangzhixiong",
+        customerId: "",
+        email: "",
+        status: -1,
+        email: "yangzhixiong@migu.cn",
+        createTime: "2019-10-29 14:12:00",
+        updateTime: "2019-10-29 14:12:00"
+      }
+    };
+  },
+  created() {
+    this.initData();
+  },
+  methods: {
+    initData() {
+      try {
+        this.getCustomerInfo();
+      } catch (err) {
+        console.log("获取数据失败", err);
+      }
+    },
+    getCustomerInfo() {
+      rest
+        .get(
+          customerManagerUrl.customerlist_url_get +
+            "/" +
+            session.getCustomerId(),
+          null
+        )
+        .then(
+          res => {
+            if (res.code == 0) {
+              this.customerInfo.customerName = res.data.customerName;
+              this.customerInfo.customerId = res.data.customerId;
+              this.customerInfo.email = res.data.email;
+              this.customerInfo.status = customerStatus.convert.boolean[res.data.status];
+              this.createTime = moment(res.data.createTime).format(
+                "YYYY-MM-DD HH:mm:ss"
+              );
+              this.customerInfo.updateTime = moment(res.data.updateTime).format(
+                "YYYY-MM-DD HH:mm:ss"
+              );
+            } else {
+              this.$message({
+                type: "error",
+                message: res.message
+              });
+            }
+          },
+          error => {
+            this.$message({
+              type: "error",
+              message: error
+            });
+          }
+        );
+    }
+  }
+};
+</script>
+
 <style lang="less">
 @import "../../style/mixin";
-.data_section {
-  padding: 20px;
-  margin-bottom: 40px;
-  .section_title {
-    text-align: center;
-    font-size: 30px;
-    margin-bottom: 10px;
-  }
-  .data_list {
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-    border-radius: 6px;
-    background: #e5e9f2;
-    .data_num {
-      color: #333;
-      font-size: 26px;
+.explain_text {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+}
+.customerdetail {
+  width: 60%;
+  background-color: #f9fafc;
+  min-height: 400px;
+  margin: 20px auto 0;
+  border-radius: 10px;
+  ul > li {
+    padding: 20px;
+    span {
+      color: #666;
     }
-    .head {
-      border-radius: 6px;
-      font-size: 22px;
-      padding: 4px 0;
-      color: #fff;
-      display: inline-block;
-    }
-  }
-  .today_head {
-    background: #ff9800;
-  }
-  .all_head {
-    background: #20a0ff;
   }
 }
-.wan {
-  .sc(16px, #333);
+.customerdetail_title {
+  margin-top: 20px;
+  .sc(24px, #666);
+  text-align: center;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
+}
+.avatar {
+  width: 120px;
+  height: 120px;
+  display: block;
 }
 </style>

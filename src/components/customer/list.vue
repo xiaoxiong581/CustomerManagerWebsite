@@ -23,8 +23,9 @@
 </template>
 
 <script>
-import { post } from "@/backend/rest";
-import { customerlist_url_get } from "@/backend/customerManagerUrl";
+import rest from "@/backend/rest";
+import customerManagerUrl from "@/backend/customerManagerUrl";
+import customerStatus from "@/backend/customerStatus"
 import moment from 'moment'
 
 export default {
@@ -69,7 +70,7 @@ export default {
       this.getUsers();
     },
     getUsers() {
-      post(customerlist_url_get, {
+      rest.post(customerManagerUrl.customerlist_url_get, {
         pageNo: this.currentPage,
         pageSize: this.pageSize
       }).then(
@@ -80,7 +81,7 @@ export default {
             res.data.customers.forEach(item => {
               const tableData = {};
               tableData.customerName = item.customerName;
-              tableData.status = item.status;
+              tableData.status = customerStatus.convert.boolean[item.status];
               tableData.email = item.email;
               tableData.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss');
               this.tableData.push(tableData);

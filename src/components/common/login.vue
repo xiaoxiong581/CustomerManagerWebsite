@@ -25,8 +25,9 @@
 </template>
 
 <script>
-import { post } from "@/backend/rest";
-import { login_url_post } from "@/backend/customerManagerUrl";
+import rest from "@/backend/rest";
+import customerManagerUrl from "@/backend/customerManagerUrl";
+import session from "@/backend/session";
 
 export default {
   data() {
@@ -43,38 +44,43 @@ export default {
       }
     };
   },
+  // mounted() {
+  //   if (session.isLogin) {
+  //     this.$router.push("customer");
+  //   }
+  // },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          post(login_url_post, {
-            userName: this.loginForm.userName,
-            password: this.loginForm.password
-          }).then(
-            res => {
-              if (res.code == 0) {
-                this.$message({
-                  type: "success",
-                  message: "登录成功"
-                });
-                this.$router.push({
-                  name: "customerdetail",
-                  params: { customerInfo: res.data }
-                });
-              } else {
+          rest.post(customerManagerUrl.login_url_post, {
+              userName: this.loginForm.userName,
+              password: this.loginForm.password
+            })
+            .then(
+              res => {
+                if (res.code == 0) {
+                  this.$message({
+                    type: "success",
+                    message: "登录成功"
+                  });
+                  session.setAuth(res.data.customerId, res.data.token);
+                  let redirect = decodeURIComponent(this.$router.currentRoute.query.redirect || '/customer');
+                  this.$router.push({path: redirect});
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: res.message
+                  });
+                }
+              },
+              error => {
                 this.$message({
                   type: "error",
-                  message: res.message
+                  message: error
                 });
               }
-            },
-            error => {
-              this.$message({
-                type: "error",
-                message: error
-              });
-            }
-          );
+            );
         } else {
           this.$notify.error({
             title: "错误",
