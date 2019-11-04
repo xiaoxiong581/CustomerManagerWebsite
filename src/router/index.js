@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+	return originalPush.call(this, location).catch(err => err)
 }
 
 const login = r => require.ensure([], () => r(require('@/components/common/login')), 'login');
@@ -28,22 +28,23 @@ const routes = [
 		path: '/customer',
 		component: home,
 		name: 'home',
-		meta: {requireAuth: true},
+		meta: { requireAuth: true },
 		children: [
 			{
 				path: '/detail',
 				component: customerdetail,
 				name: 'customerdetail',
-				meta: {requireAuth: true},
+				meta: { requireAuth: true, menu: ['用户管理', '用户详情'] }
 			},
 			{
 				path: '/list',
 				component: customerlist,
 				name: 'customerlist',
-				meta: {requireAuth: true},
+				meta: { requireAuth: true, menu: ['用户管理', '用户列表'] }
+
 			}
 		]
-	}	
+	}
 ]
 
 export default new Router({

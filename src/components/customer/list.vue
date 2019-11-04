@@ -1,5 +1,6 @@
 <template>
   <div class="fillcontain">
+    <head-top></head-top>
     <div class="table_container">
       <el-table :data="tableData" highlight-current-row style="width: 100%">
         <el-table-column type="index" label="序号" width="100"></el-table-column>
@@ -25,8 +26,9 @@
 <script>
 import rest from "@/backend/rest";
 import customerManagerUrl from "@/backend/customerManagerUrl";
-import customerStatus from "@/backend/customerStatus"
-import moment from 'moment'
+import customerStatus from "@/backend/customerStatus";
+import moment from "moment";
+import headTop from "@/components/common/headTop";
 
 export default {
   data() {
@@ -51,7 +53,10 @@ export default {
       currentPage: 1
     };
   },
-  created() {
+  components: {
+    headTop
+  },
+  activated() {
     this.initData();
   },
   methods: {
@@ -70,36 +75,40 @@ export default {
       this.getUsers();
     },
     getUsers() {
-      rest.post(customerManagerUrl.customerlist_url_get, {
-        pageNo: this.currentPage,
-        pageSize: this.pageSize
-      }).then(
-        res => {
-          if (res.code == 0) {
-            this.count = res.data.totalCount;
-            this.tableData = [];
-            res.data.customers.forEach(item => {
-              const tableData = {};
-              tableData.customerName = item.customerName;
-              tableData.status = customerStatus.convert.boolean[item.status];
-              tableData.email = item.email;
-              tableData.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss');
-              this.tableData.push(tableData);
-            });
-          } else {
+      rest
+        .post(customerManagerUrl.customerlist_url_get, {
+          pageNo: this.currentPage,
+          pageSize: this.pageSize
+        })
+        .then(
+          res => {
+            if (res.code == 0) {
+              this.count = res.data.totalCount;
+              this.tableData = [];
+              res.data.customers.forEach(item => {
+                const tableData = {};
+                tableData.customerName = item.customerName;
+                tableData.status = customerStatus.convert.boolean[item.status];
+                tableData.email = item.email;
+                tableData.createTime = moment(item.createTime).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                );
+                this.tableData.push(tableData);
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: res.message
+              });
+            }
+          },
+          error => {
             this.$message({
               type: "error",
-              message: res.message
+              message: error
             });
           }
-        },
-        error => {
-          this.$message({
-            type: "error",
-            message: error
-          });
-        }
-      );
+        );
     }
   }
 };

@@ -11,9 +11,6 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
-    context: [ //代理路径
-      '/customer'
-  ],
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

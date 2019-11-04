@@ -39,7 +39,10 @@ axios.interceptors.response.use(
           })
       }
     }
-    return Promise.reject(error.response.data.message)   // 返回接口返回的错误信息
+    if (error.response) {
+      return Promise.reject(error.response.data.message)
+    }
+    return Promise.reject(error)
   });
 
 function get(url, params) {

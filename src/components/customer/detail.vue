@@ -1,5 +1,6 @@
 <template>
   <div class="fillcontain">
+    <head-top></head-top>
     <header class="customerdetail_title">用户详情</header>
     <div class="customerdetail">
       <ul>
@@ -35,9 +36,10 @@
 <script>
 import rest from "@/backend/rest";
 import customerManagerUrl from "@/backend/customerManagerUrl";
-import customerStatus from "@/backend/customerStatus"
+import customerStatus from "@/backend/customerStatus";
 import session from "@/backend/session";
 import moment from "moment";
+import headTop from "@/components/common/headTop";
 
 export default {
   data() {
@@ -53,7 +55,10 @@ export default {
       }
     };
   },
-  created() {
+  components: {
+    headTop
+  },
+  activated() {
     this.initData();
   },
   methods: {
@@ -78,7 +83,8 @@ export default {
               this.customerInfo.customerName = res.data.customerName;
               this.customerInfo.customerId = res.data.customerId;
               this.customerInfo.email = res.data.email;
-              this.customerInfo.status = customerStatus.convert.boolean[res.data.status];
+              this.customerInfo.status =
+                customerStatus.convert.boolean[res.data.status];
               this.createTime = moment(res.data.createTime).format(
                 "YYYY-MM-DD HH:mm:ss"
               );
