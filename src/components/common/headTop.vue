@@ -39,8 +39,8 @@ export default {
                 this.$message({
                   type: "success",
                   message: "退出成功"
-				});
-				session.logout()
+                });
+                session.logout();
                 this.$router.push("/login");
               } else {
                 this.$message({
@@ -79,5 +79,6 @@ export default {
 }
 .el-dropdown-menu__item {
   text-align: center;
+  line-height: 25px;
 }
 </style>

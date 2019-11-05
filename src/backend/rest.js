@@ -3,9 +3,9 @@ import session from '@/backend/session'
 import router from '../router'
 
 if (process.env.NODE_ENV == "development") {
-  axios.defaults.baseURL = "http://localhost:29080/customermanager/v1";
+  axios.defaults.baseURL = "http://192.168.137.1:19080/customermanager/v1";
 } else {
-  axios.defaults.baseURL = "http://localhost:29080/customermanager/v1";
+  axios.defaults.baseURL = "http://192.168.137.1:19080/customermanager/v1";
 }
 axios.defaults.timeout = 10000;
 
@@ -50,7 +50,6 @@ function get(url, params) {
     axios
       .get(url, params)
       .then(res => {
-        console.log(res)
         resolve(res.data);
       })
       .catch(err => {
@@ -64,7 +63,19 @@ function post(url, body) {
     axios
       .post(url, body)
       .then(res => {
-        console.log(res)
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+function del (url, params) {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(url, params)
+      .then(res => {
         resolve(res.data);
       })
       .catch(err => {
@@ -75,5 +86,6 @@ function post(url, body) {
 
 export default {
   get,
-  post
+  post,
+  del
 };
