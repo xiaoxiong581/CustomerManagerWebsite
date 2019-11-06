@@ -3,7 +3,7 @@ import session from '@/backend/session'
 import router from '../router'
 
 if (process.env.NODE_ENV == "development") {
-  axios.defaults.baseURL = "http://192.168.137.1:19080/customermanager/v1";
+  axios.defaults.baseURL = "https://localhost:29080/customermanager/v1";
 } else {
   axios.defaults.baseURL = "/customermanager/v1";
 }
