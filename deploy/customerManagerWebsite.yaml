@@ -1,0 +1,11 @@
+customerManagerWebsite:
+  image: docker.io/nginx:1.17.5
+  ports:
+   - "19070:19070"
+  volumes:
+   - "/opt/software/CustomerManagerWebsite/html:/usr/share/nginx/html"
+   - "/opt/software/CustomerManagerWebsite/conf:/etc/nginx/conf.d"
+   - "/opt/software/CustomerManagerWebsite/log:/var/log/nginx"
+  container_name: customerManagerWebsite
+  restart: always
+

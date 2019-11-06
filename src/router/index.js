@@ -48,6 +48,7 @@ const routes = [
 ]
 
 export default new Router({
+	base: '/',
 	mode: 'history',
 	routes,
 	strict: process.env.NODE_ENV !== 'production',

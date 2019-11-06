@@ -5,7 +5,7 @@ import router from '../router'
 if (process.env.NODE_ENV == "development") {
   axios.defaults.baseURL = "http://192.168.137.1:19080/customermanager/v1";
 } else {
-  axios.defaults.baseURL = "http://192.168.137.1:19080/customermanager/v1";
+  axios.defaults.baseURL = "/customermanager/v1";
 }
 axios.defaults.timeout = 10000;
 
