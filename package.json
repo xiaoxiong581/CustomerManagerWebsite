@@ -15,7 +15,7 @@
     "element-ui": "^1.2.9",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "sass-resources-loader": "^2.0.1",
     "style-loader": "^1.0.0",
     "stylus-loader": "^3.0.2",
